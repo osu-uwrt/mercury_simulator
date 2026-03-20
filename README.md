@@ -1,2 +1,2 @@
 # mercury_simulator
-Th OSO UWRT C-based simulator for th Mercury stack
+The OSU UWRT C-based simulator for the Mercury stack
