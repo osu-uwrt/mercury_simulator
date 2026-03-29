@@ -132,10 +132,7 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
     r_cob =
       v3d(feedForward[4] / bouyancyVector.norm(), -feedForward[3] / bouyancyVector.norm(), 0.005);
   } catch (std::runtime_error & e) {
-    double hullVolume = getYamlNodeAs<double>(vehicle_config, {"hull_volume"});
-    bouyancyVector = v3d(0, 0, WATER_DENSITY * GRAVITY * hullVolume);
-    r_cob = std2v3d(
-      getYamlNodeAs<std::vector<double>>(simulator_config, {"vehicle_properties", name, "cob"}));
+    RCLCPP_WARN(node->get_logger(), "Cannot find feed forward to get bouyancy vector");
   }
 
   //center of drag
