@@ -55,20 +55,22 @@ bool Robot::loadParams(rclcpp::Node::SharedPtr Node)
   ballast_stamp = node->get_clock()->now();
 
   // Retrieve the path to the YAML config file from the parameters
-  string vehicle_config_file, simulator_config_file;
-  node->declare_parameter("vehicle_config", "");
+  string vehicle_config_file_path, simulator_config_file;
+  node->declare_parameter("vehicle_config_path", "");
   node->declare_parameter("simulator_config", "");
   if (
-    node->get_parameter("vehicle_config", vehicle_config_file) &&
+    node->get_parameter("vehicle_config_path", vehicle_config_file_path) &&
     node->get_parameter("simulator_config", simulator_config_file)) {
     try {
       RCLCPP_INFO(
-        node->get_logger(), "Opening vehicle config file: %s and simulator config file %s",
-        vehicle_config_file.c_str(), simulator_config_file.c_str());
+        node->get_logger(), "Opening vehicle config files: %s and simulator config file %s",
+        vehicle_config_file_path.c_str(), simulator_config_file.c_str());
       // Loading YAML file for parsing
-      YAML::Node vehicle_config = YAML::LoadFile(vehicle_config_file);
+      YAML::Node vehicle_config = YAML::LoadFile(vehicle_config_file_path + "/" + name + ".yaml");
+      YAML::Node controller_config = YAML::LoadFile(vehicle_config_file_path + "/" + name + "_controller.yaml");
+      YAML::Node thruster_config = YAML::LoadFile(vehicle_config_file_path + "/" + name + "_xacro_frames.yaml");
       YAML::Node simulator_config = YAML::LoadFile(simulator_config_file);
-      Robot::storeConfigData(vehicle_config, simulator_config);
+      Robot::storeConfigData(vehicle_config, controller_config, simulator_config, thruster_config);
 
       // Loading params successeeded
       return true;
@@ -90,7 +92,7 @@ bool Robot::loadParams(rclcpp::Node::SharedPtr Node)
 /**
  * @brief Unpacks YAML contents and stores them into class variables
  */
-void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node & simulator_config)
+void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node & controller_config, const YAML::Node & simulator_config, const YAML::Node & thruster_config)
 {
   // Getting mass information
   mass = getYamlNodeAs<double>(vehicle_config, {"mass"});
@@ -141,8 +143,6 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
       getYamlNodeAs<std::vector<double>>(simulator_config, {"vehicle_properties", name, "cod"})) -
     r_com;
 
-  //  Getting base link position relative to center of mass
-  r_baseLink = std2v3d(getYamlNodeAs<std::vector<double>>(vehicle_config, {"base_link"}));
 
   // Getting active ballast information (if available)
   ballast_enabled = false;
@@ -167,14 +167,14 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
   imu_enabled = false;
   try {
     std::vector<double> imu_pose =
-      getYamlNodeAs<std::vector<double>>(vehicle_config, {"imu", "pose"});
+      getYamlNodeAs<std::vector<double>>(simulator_config, {"vehicle_properties", name, "imu", "pose"});
     r_imu = v3d(imu_pose[0], imu_pose[1], imu_pose[2]) - r_com;
     q_imu = rpy2quat(imu_pose[3], imu_pose[4], imu_pose[5]);
-    imu_rate = 1.0 / getYamlNodeAs<double>(vehicle_config, {"imu", "rate"});
-    imu_yawDrift = getYamlNodeAs<double>(vehicle_config, {"imu", "yaw_drift"});
-    imu_sigmaAccel = getYamlNodeAs<double>(vehicle_config, {"imu", "sigma_accel"});
-    imu_sigmaOmega = getYamlNodeAs<double>(vehicle_config, {"imu", "sigma_omega"}) * M_PI / 180;
-    imu_sigmaAngle = getYamlNodeAs<double>(vehicle_config, {"imu", "sigma_angle"}) * M_PI / 180;
+    imu_rate = 1.0 / getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "imu", "rate"});
+    imu_yawDrift = getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "imu", "yaw_drift"});
+    imu_sigmaAccel = getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "imu", "sigma_accel"});
+    imu_sigmaOmega = getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "imu", "sigma_omega"}) * M_PI / 180;
+    imu_sigmaAngle = getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "imu", "sigma_angle"}) * M_PI / 180;
 
     //all settings parsed correctly, enable IMU
     imu_enabled = true;
@@ -188,9 +188,9 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
   depth_enabled = false;
   try {
     r_depth =
-      std2v3d(getYamlNodeAs<std::vector<double>>(vehicle_config, {"depth", "pose"})) - r_com;
-    depth_rate = 1.0 / getYamlNodeAs<double>(vehicle_config, {"depth", "rate"});
-    depth_sigma = getYamlNodeAs<double>(vehicle_config, {"depth", "sigma"});
+      std2v3d(getYamlNodeAs<std::vector<double>>(vehicle_config, {"vehicle_properties", name, "depth", "pose"})) - r_com;
+    depth_rate = 1.0 / getYamlNodeAs<double>(vehicle_config, {"vehicle_properties", name, "depth", "rate"});
+    depth_sigma = getYamlNodeAs<double>(vehicle_config, {"vehicle_properties", name, "depth", "sigma"});
 
     //all settings parsed correctly, enable depth
     depth_enabled = true;
@@ -204,11 +204,11 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
   dvl_enabled = false;
   try {
     std::vector<double> dvl_pose =
-      getYamlNodeAs<std::vector<double>>(vehicle_config, {"dvl", "pose"});
+      getYamlNodeAs<std::vector<double>>(simulator_config, {"vehicle_properties", name, "dvl", "pose"});
     r_dvl = v3d(dvl_pose[0], dvl_pose[1], dvl_pose[2]) - r_com;
     q_dvl = rpy2quat(dvl_pose[3], dvl_pose[4], dvl_pose[5]);
-    dvl_rate = 1.0 / getYamlNodeAs<double>(vehicle_config, {"dvl", "rate"});
-    dvl_sigma = getYamlNodeAs<double>(vehicle_config, {"dvl", "sigma"});
+    dvl_rate = 1.0 / getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "dvl", "rate"});
+    dvl_sigma = getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "dvl", "sigma"});
 
     //all settings parsed correctly, enable dvl
     dvl_enabled = true;
@@ -223,7 +223,7 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
     getYamlNodeAs<std::vector<double>>(simulator_config, {"vehicle_properties", name, "damping"});
 
   // Creating thruster forces -> body forces & torques matrix by looping through each thruster
-  YAML::Node thrusters = vehicle_config["thrusters"];
+  YAML::Node thrusters = thruster_config["thrusters"];
   maxThrust =
     getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "thruster_max_force"});
   thrusterCount = thrusters.size();
@@ -605,7 +605,6 @@ m3d Robot::getInvInertia() { return invBodyInertia; }
 double Robot::getIMUDrift() { return imu_yawDrift; }
 v3d Robot::getThrusterForces() { return forces; }
 v3d Robot::getThrusterTorques() { return torques; }
-v3d Robot::getBaseLinkOffset() { return r_baseLink; }
 string Robot::getName() { return name; }
 v3d Robot::getNetBouyantForce(const double & depth)
 {

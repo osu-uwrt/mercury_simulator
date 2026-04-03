@@ -6,7 +6,7 @@ from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration as LC
 import os
 
-DEFAULT_ROBOT_NAME = "talos"
+DEFAULT_ROBOT_NAME = "mercury"
 DEFAULT_ACTIVE_CONTROL_MODEL = "hybrid"
 
 
@@ -22,20 +22,12 @@ def determine_launch_files(context, *args, **kwargs):
     #
     # ADD LAUNCHES HERE. THEY CAN BE CONDITIONAL
     #
-    
-    print("Launching with FAKE hardware")
-    add_launch_file (
-        os.path.join(
-            get_package_share_directory('mercury_hardware'),
-            'launch',
-            'hardware_fake_dvl.launch.py')
-    )
 
     add_launch_file (
         os.path.join(
             get_package_share_directory('mercury_controller'),
             'launch',
-            'control_system.launch.py'),
+            'controller.launch.py'),
         
         #launch args
         [
@@ -46,18 +38,11 @@ def determine_launch_files(context, *args, **kwargs):
     
     add_launch_file (
         os.path.join(
-            get_package_share_directory('mercury_controller'),
+            get_package_share_directory('mercury_hardware'),
             'launch',
             'navigation.launch.py')
     )
     
-    add_launch_file(
-        os.path.join(
-            get_package_share_directory("tensor_detector"),
-            "launch",
-            "tensorrt.launch.py"
-        )
-    )
     
     add_launch_file (
         os.path.join(
@@ -66,12 +51,12 @@ def determine_launch_files(context, *args, **kwargs):
             'mapping.launch.py'),
     )
     
-    add_launch_file (
-        os.path.join(
-            get_package_share_directory('mercury_autonomy'),
-            'launch',
-            'autonomy.launch.py') 
-    )
+    #add_launch_file (
+    #    os.path.join(
+    #        get_package_share_directory('mercury_autonomy'),
+    #        'launch',
+    #        'autonomy.launch.py') 
+    #)
     
     robot_name = LC('robot')
     
@@ -112,12 +97,6 @@ def generate_launch_description():
             'robot',
             default_value=DEFAULT_ROBOT_NAME, 
             description='name of the robot to spawn'),
-        
-        DeclareLaunchArgument(
-            'hardware',
-            default_value='real',
-            description='Hardware implementation to use. Options are \"real\", \"fake\", or \"none\".'
-        ),
 
         DeclareLaunchArgument(
             'active_control_enabled',
