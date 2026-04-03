@@ -50,6 +50,18 @@ def determine_launch_files(context, *args, **kwargs):
             'launch',
             'mapping.launch.py'),
     )
+
+    add_launch_file(
+        os.path.join(
+            get_package_share_directory('mercury_simulator'),
+            'launch',
+            'sim.launch.py'
+        ),
+
+        [
+            ('robot', LC('robot'))
+        ]
+    )
     
     #add_launch_file (
     #    os.path.join(

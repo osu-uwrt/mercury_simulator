@@ -10,10 +10,6 @@ DEFAULT_ACTIVE_CONTROL_MODEL = "hybrid"
 
 def generate_launch_description():
 
-    vehicle_config_path = get_package_share_directory("mercury_descriptions") + "/" + LC("robot")
-    simulation_config = get_package_share_directory("mercury_simulator") + "/config/simulator.yaml"
-
-
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -34,7 +30,7 @@ def generate_launch_description():
                 name="physics_simulator",
                 output="screen",
                 parameters=[
-                    {"vehicle_config_path", get_package_share_directory("mercury_descriptions") + "/" + LC("robot")},
+                    {"vehicle_config_path", get_package_share_directory("mercury_descriptions") + '/mercury/config/mercury'},
                     {"simulator_config", get_package_share_directory("mercury_simulator") + "/config/simulator.yaml"},
                     {"robot", LC("robot")},
                 ]
