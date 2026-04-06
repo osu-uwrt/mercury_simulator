@@ -66,9 +66,9 @@ bool Robot::loadParams(rclcpp::Node::SharedPtr Node)
         node->get_logger(), "Opening vehicle config files: %s and simulator config file %s",
         vehicle_config_file_path.c_str(), simulator_config_file.c_str());
       // Loading YAML file for parsing
-      YAML::Node vehicle_config = YAML::LoadFile(vehicle_config_file_path + "/" + name + ".yaml");
-      YAML::Node controller_config = YAML::LoadFile(vehicle_config_file_path + "/" + name + "_controller.yaml");
-      YAML::Node thruster_config = YAML::LoadFile(vehicle_config_file_path + "/" + name + "_xacro_frames.yaml");
+      YAML::Node vehicle_config = YAML::LoadFile(vehicle_config_file_path + ".yaml");
+      YAML::Node controller_config = YAML::LoadFile(vehicle_config_file_path + "_controller.yaml");
+      YAML::Node thruster_config = YAML::LoadFile(vehicle_config_file_path + "_xacro_frames.yaml");
       YAML::Node simulator_config = YAML::LoadFile(simulator_config_file);
       Robot::storeConfigData(vehicle_config, controller_config, simulator_config, thruster_config);
 
@@ -273,6 +273,7 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
     RCLCPP_INFO(node->get_logger(), "Acoustics is disabled.");
   }
 
+  /*
   //loop through the claw objects and add them to the dictionary
   for (YAML::const_iterator ti = simulator_config["claw"]["fake_objects"].begin();
        ti != simulator_config["claw"]["fake_objects"].end(); ++ti) {
@@ -285,6 +286,7 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
     object.com = v3d(object_com[0], object_com[1], object_com[2]);
     claw_objects[claw_object_name.as<string>()] = object;
   }
+  */
 }
 
 //================================//

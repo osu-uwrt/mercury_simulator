@@ -9,7 +9,7 @@
 vehicle_properties:
 
   #HEY THESE ARE TALOS NUMBERS!!!!!!!!!!!!!!!
-  triton:
+  mercury:
     base_wrench: [0.0, 0.0, -4.9, -0.95, 2.1, 0.0]
     cod: [0.0, 0.0, 0.1]
     inertia3x3: [.8, -0.03, -0.0165, # Ixx Ixy Ixz
