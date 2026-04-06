@@ -36,7 +36,7 @@ vehicle_properties:
 
     depth:
       rate: 20 # Hz
-      sigma: 0.010 # Stdev in m. Used by gazebo
+      sigma: 0.010 # Stdev in m. Used by sim
       pose: [ -0.305, -0.125, 0.045, 0.0, 0.0, 0.0]
 
     imu:
@@ -45,6 +45,4 @@ vehicle_properties:
       sigma_omega: 0.01 # Stdev in deg/s. Used by sim
       sigma_angle: 0.5 # Std dev in deg. Used by sim
       yaw_drift:   1.5 # deg/min 
-      pose: [-0.25, -0.1492, 0.0222, 3.141, 0.0, -1.5707]
-
-
+      pose: [-0.05, -0.05, 0.0222, 0.0, 0.0, 0.0]

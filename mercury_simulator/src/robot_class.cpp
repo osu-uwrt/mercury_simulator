@@ -188,9 +188,9 @@ void Robot::storeConfigData(const YAML::Node & vehicle_config, const YAML::Node 
   depth_enabled = false;
   try {
     r_depth =
-      std2v3d(getYamlNodeAs<std::vector<double>>(vehicle_config, {"vehicle_properties", name, "depth", "pose"})) - r_com;
-    depth_rate = 1.0 / getYamlNodeAs<double>(vehicle_config, {"vehicle_properties", name, "depth", "rate"});
-    depth_sigma = getYamlNodeAs<double>(vehicle_config, {"vehicle_properties", name, "depth", "sigma"});
+      std2v3d(getYamlNodeAs<std::vector<double>>(simulator_config, {"vehicle_properties", name, "depth", "pose"})) - r_com;
+    depth_rate = 1.0 / getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "depth", "rate"});
+    depth_sigma = getYamlNodeAs<double>(simulator_config, {"vehicle_properties", name, "depth", "sigma"});
 
     //all settings parsed correctly, enable depth
     depth_enabled = true;
