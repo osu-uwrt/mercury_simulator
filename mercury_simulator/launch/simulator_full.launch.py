@@ -55,7 +55,7 @@ def determine_launch_files(context, *args, **kwargs):
         os.path.join(
             get_package_share_directory('mercury_simulator'),
             'launch',
-            'sim.launch.py'
+            'simulator.launch.py'
         ),
 
         [
