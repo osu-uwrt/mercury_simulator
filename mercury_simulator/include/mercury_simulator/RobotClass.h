@@ -87,7 +87,6 @@ public:
   v3d getThrusterForces();
   v3d getLatestLinAccel();
   v3d getLatestAngAccel();
-  v3d getBaseLinkOffset();
   v3d getThrusterTorques();
   v3d getClawObjectForces();
   v3d getClawObjectTorques();
@@ -163,7 +162,6 @@ private:
   std::unique_ptr<tf2_ros::Buffer> tf_buffer;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
 
-  v3d r_baseLink;         // Base link cordinate system relative to COM
   v3d r_cob;              // Center of bouyancy relative to COM
   v3d r_cod;              // Center of drag relative to COM
   v3d environment_force;  // Force from the environment
@@ -232,7 +230,7 @@ private:
   //       FUNCTIONS        //
   //========================//
 
-  void storeConfigData(const YAML::Node & vehicle_config, const YAML::Node & simulation_config);
+  void storeConfigData(const YAML::Node & vehicle_config, const YAML::Node & controller_config, const YAML::Node & simulator_config, const YAML::Node & thruster_config);
   v3d std2v3d(std::vector<double> stdVect);
   void setForcesTorques(vXd thrusterForces);
   double getScaleFactor(const double & depth);

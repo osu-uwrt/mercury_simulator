@@ -24,6 +24,12 @@ find_package(mercury_msgs REQUIRED)
 
 add_executable(physics_simulator src/physics_simulator.cpp src/robot_class.cpp src/collisionBox_class.cpp)
 
+#install launch files
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+  FILES_MATCHING PATTERN "*.launch*"
+)
+
 target_include_directories(physics_simulator PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -49,6 +55,11 @@ target_link_libraries(physics_simulator
 
 install(TARGETS physics_simulator
   DESTINATION lib/${PROJECT_NAME}
+)
+
+#install 
+install(DIRECTORY config 
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
