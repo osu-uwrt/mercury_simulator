@@ -40,7 +40,12 @@ def determine_launch_files(context, *args, **kwargs):
         os.path.join(
             get_package_share_directory('mercury_hardware'),
             'launch',
-            'navigation.launch.py')
+            'navigation.launch.py'),
+
+        [
+            ('sim_enabled', LC('sim_enabled'))
+        ]
+        
     )
     
     
@@ -120,6 +125,12 @@ def generate_launch_description():
             'active_control_model',
             default_value=DEFAULT_ACTIVE_CONTROL_MODEL,
             description="The default active control model to use"
+        ),
+
+        DeclareLaunchArgument(
+            'sim_enabled',
+            default_value='True',
+            description="Enable simulator to read proper xacro"
         ),
         
         OpaqueFunction(function=determine_launch_files),
