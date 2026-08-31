@@ -4,8 +4,7 @@
 
 #include <eigen3/Eigen/Dense>
 
-struct Claw_Object
-{
-  double net_buoyancy;
-  Eigen::Vector3d com;
+struct Claw_Object {
+    double net_buoyancy;
+    Eigen::Vector3d com;
 };
