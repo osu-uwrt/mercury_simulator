@@ -1,6 +1,6 @@
 #super secret yaml file for all things sim
 
-#The Vehicle should never load this file!!! 
+#The Vehicle should never load this file!!!
 #If you are loading things from here onto the vehicle you are doing something wrong!
 #You should likely look at vehicle.yaml located in mercury_common
 #This file is made to serpate out parameters that are used only in the simulator, like ground truths.
@@ -8,17 +8,17 @@
 
 vehicle_properties:
 
-  #HEY THESE ARE TALOS NUMBERS!!!!!!!!!!!!!!!
+  #HEY SOME OF THESE ARE TALOS NUMBERS!!!!!!!!!!!!!!!
   mercury:
-    base_wrench: [0.0, 0.0, -4.9, -0.95, 2.1, 0.0]
+    base_wrench: [0.0, 0.0, -0.3, 0.0, 0.0, 0.0]
     cod: [0.0, 0.0, 0.1]
     inertia3x3: [.8, -0.03, -0.0165, # Ixx Ixy Ixz
                 -0.03, 0.35, 0.0214,  # Iyx Iyy Iyz
                 -0.0165, 0.0214, .8]  # Izx Izy Izz kg*m^
 
-    #center of mass discrepancy      
-    dcom: [0.01, 0.0, 0.0]
-                
+    #center of mass discrepancy
+    dcom: [0.0, 0.0, 0.0]
+
     # drag = (k1 + k2 * abs(v) + k3 * exp(abs(v) / k4) )* sign(v)
     damping: [-38.7588,  -28.1146,   37.3211,    0.5034, #x
               -7.4651,   17.7641,    7.0013,    0.3067, #y
@@ -30,7 +30,7 @@ vehicle_properties:
     thruster_max_force: 28.0
 
     #sim discrepency - allows to test control when feed forward is not perfect
-    sim_discrepancy: [0.0, 1.0, -0.5, 0.1, -0.05, 0.0]
+    sim_discrepancy: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
     env_force: [0.0, 0.7, 0.0]
 
@@ -44,7 +44,7 @@ vehicle_properties:
       sigma_accel: 0.016 # Stdev in m/s^2. Used by sim
       sigma_omega: 0.01 # Stdev in deg/s. Used by sim
       sigma_angle: 0.5 # Std dev in deg. Used by sim
-      yaw_drift:   1.5 # deg/min 
+      yaw_drift:   1.5 # deg/min
       pose: [-0.07187, -0.0658, 0.02197, 0.0, 0.0, 0.0]
 
     dvl:
