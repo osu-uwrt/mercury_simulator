@@ -121,8 +121,6 @@ public:
         auto statePubTime = std::chrono::duration<double>((double)STATE_PUB_TIME);
         statePubTimer =
             this->create_wall_timer(statePubTime, std::bind(&PhysicsSimNode::publishState, this));
-        ballastUpdateTimer =
-            this->create_wall_timer(100ms, std::bind(&PhysicsSimNode::updateActiveBallast, this));
         solenoidPubTimer =
             this->create_wall_timer(0.5s, std::bind(&PhysicsSimNode::publishSolenoidStates, this));
         thrusterTelemetryTimer =
@@ -973,16 +971,14 @@ private:
             // Getting state information from simulator
             vXd state = robot.getState();
             quat q = state2quat(state);
-            v3d baseLinkOffset =
-                q * robot.getBaseLinkOffset(); // Converting baseLink to world frame
 
             // Getting position
             // Sim uses COM for robot position, need to add offset for position relative to base
             // link
             geometry_msgs::msg::Pose poseMsg;
-            poseMsg.position.x = state.x() - baseLinkOffset.x();
-            poseMsg.position.y = state.y() - baseLinkOffset.y();
-            poseMsg.position.z = state.z() - baseLinkOffset.z();
+            poseMsg.position.x = state.x();
+            poseMsg.position.y = state.y();
+            poseMsg.position.z = state.z();
             // Setting orientation
             poseMsg.orientation.w = q.w();
             poseMsg.orientation.x = q.x();
