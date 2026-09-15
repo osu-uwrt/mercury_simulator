@@ -1,6 +1,6 @@
 #super secret yaml file for all things sim
 
-#The Vehicle should never load this file!!! 
+#The Vehicle should never load this file!!!
 #If you are loading things from here onto the vehicle you are doing something wrong!
 #You should likely look at vehicle.yaml located in mercury_common
 #This file is made to serpate out parameters that are used only in the simulator, like ground truths.
@@ -8,7 +8,7 @@
 
 vehicle_properties:
 
-  #HEY THESE ARE TALOS NUMBERS!!!!!!!!!!!!!!!
+  #HEY SOME OF THESE ARE TALOS NUMBERS!!!!!!!!!!!!!!!
   mercury:
     base_wrench: [0.0, 0.0, -1.05, 0.0, 0.0, 0.0]
     cod: [0.0, 0.0, 0.0]
@@ -44,7 +44,7 @@ vehicle_properties:
       sigma_accel: 0.016 # Stdev in m/s^2. Used by sim
       sigma_omega: 0.01 # Stdev in deg/s. Used by sim
       sigma_angle: 0.5 # Std dev in deg. Used by sim
-      yaw_drift:   1.5 # deg/min 
+      yaw_drift:   1.5 # deg/min
       pose: [-0.07187, -0.0658, 0.02197, 0.0, 0.0, 0.0]
 
     dvl:
