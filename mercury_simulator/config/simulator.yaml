@@ -31,6 +31,7 @@ vehicle_properties:
 
     #sim discrepency - allows to test control when feed forward is not perfect
     sim_discrepancy: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    sim_discrepancy: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
     env_force: [0.0, 0.0, 0.0]
 
@@ -44,6 +45,7 @@ vehicle_properties:
       sigma_accel: 0.016 # Stdev in m/s^2. Used by sim
       sigma_omega: 0.01 # Stdev in deg/s. Used by sim
       sigma_angle: 0.5 # Std dev in deg. Used by sim
+      yaw_drift:   1.5 # deg/min
       yaw_drift:   1.5 # deg/min
       pose: [-0.07187, -0.0658, 0.02197, 0.0, 0.0, 0.0]
 
